@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as developer;
 
 import 'package:app/models/businessLayer/base_route.dart';
 import 'package:app/models/businessLayer/global.dart' as global;
@@ -15,6 +16,7 @@ import 'package:crypto/crypto.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -389,82 +391,90 @@ class _SignInScreenState extends BaseRouteState<SignInScreen> {
   }
 
   _signInWithApple() async {
+
     try {
-      bool isConnected = await br.checkConnectivity();
+         bool isConnected = await br.checkConnectivity();
       if (isConnected) {
-        showOnlyLoaderDialog();
+          showOnlyLoaderDialog();  // Check if a user is already logged in
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        developer. log("User is already logged in. Logging out...");
+        await FirebaseAuth.instance.signOut(); // Log out if already logged in
+      }
+      developer. log("Starting Apple Sign-In...");
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
 
-        final firebaseAuth = FirebaseAuth.instance;
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+      FirebaseAuth.instance.signInWithCredential(oauthCredential).then((auth) async {
+        developer. log("auth code: ${auth.user?.email}");
 
-        String generateNonce([int length = 32]) {
-          const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-          final random = Random.secure();
-          return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
-        }
+       developer. log("auth code: ${auth.user?.uid}");
+        developer.  log("Apple Sign-In successful!");
+        if (auth.user != null) {
 
-        String sha256ofString(String input) {
-          final bytes = utf8.encode(input);
-          final digest = sha256.convert(bytes);
-          return digest.toString();
-        }
+              await apiHelper!.socialLogin(emailId: auth.user?.email, type: "apple", appleId: auth.user?.uid).then((result) async {
+                if (result != null) {
+                  if (result.status == "1") {
+                    global.user = result.recordList;
+                    global.sp.setString('currentUser', json.encode(global.user!.toJson()));
 
-        final rawNonce = generateNonce();
-        final nonce = sha256ofString(rawNonce);
-        final credential = await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email,
-            AppleIDAuthorizationScopes.fullName,
-          ],
-          nonce: nonce,
-        );
-        final oauthCredential = OAuthProvider("apple.com").credential(
-          idToken: credential.identityToken,
-          rawNonce: rawNonce,
-        );
-        final UserCredential authResult = await firebaseAuth.signInWithCredential(oauthCredential);
-        await apiHelper!.socialLogin(emailId: credential.email, type: "apple", appleId: authResult.user?.uid).then((result) async {
-          if (result != null) {
-            if (result.status == "1") {
-              global.user = result.recordList;
-              global.sp.setString('currentUser', json.encode(global.user!.toJson()));
-
-              await getCurrentPosition().then((_) async {
-                if (global.lat != null && global.lng != null) {
-                  hideLoader();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => BottomNavigationWidget(
-                              a: widget.analytics,
-                              o: widget.observer,
-                            )),
-                  );
-                } else {
-                  hideLoader();
-                  showSnackBar(key: _scaffoldKey, snackBarMessage: AppLocalizations.of(context)!.txt_please_enablet_location_permission_to_use_app);
+                    await getCurrentPosition().then((_) async {
+                      if (global.lat != null && global.lng != null) {
+                        hideLoader();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => BottomNavigationWidget(
+                                    a: widget.analytics,
+                                    o: widget.observer,
+                                  )),
+                        );
+                      } else {
+                        hideLoader();
+                        showSnackBar(key: _scaffoldKey, snackBarMessage: AppLocalizations.of(context)!.txt_please_enablet_location_permission_to_use_app);
+                      }
+                    });
+                  } else if (result.status == "4") {
+                    hideLoader();
+                    if(!mounted) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => SignUpScreen(
+                                a: widget.analytics,
+                                o: widget.observer,
+                                email: auth.user?.email,
+                                appleId: auth.user?.uid,
+                              )),
+                    );
+                  }
                 }
               });
-            } else if (result.status == "4") {
-              hideLoader();
-              if(!mounted) return;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => SignUpScreen(
-                          a: widget.analytics,
-                          o: widget.observer,
-                          email: credential.email,
-                          appleId: authResult.user?.uid,
-                        )),
-              );
-            }
-          }
-        });
-      } else {
-        showNetworkErrorSnackBar(_scaffoldKey);
-      }
-    } catch (e) {
-      hideLoader();
-      debugPrint("Exception - sign_in_screen.dart - _signinWithApple():$e");
+        }else{
+
+        }
+      }).catchError( (e){
+        developer. log ("Apple Sign-In Error: $e");
+      });
+
+
+}
+     else {
+    showNetworkErrorSnackBar(_scaffoldKey);
     }
+  } catch (e) {
+  hideLoader();
+  developer.log("Exception - sign_in_screen.dart - _signinWithApple():$e");
+  }
+
+
+
   }
 
   _signInWithFacebook() async {

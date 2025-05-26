@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>GoFresha UserApp</string>
+	<string>Salonatna</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.496857907520-a72k1i7hohfsoqtpkv7qh6ae54b68cbp</string>
+				<string>com.googleusercontent.apps.801469931657-prfnf03f5meaurg2bultuvg3npia40fk</string>
 			</array>
 		</dict>
 		<dict>
@@ -50,27 +50,33 @@
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>GOOGLE_MAPS_KEY</key>
-	<string>$(GOOGLE_MAPS_KEY)</string>
+	<string>AIzaSyCfg_eIB8dSjOehFq0O-nMTPQlNL6Lu58g</string>
+
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+
+		<key>NSCameraUsageDescription</key>
+    	<string>This app requires access to your camera to take photos for profile pictures and to select images for various features.</string>
+    	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    	<string>This app needs access to your location in the background to provide accurate delivery updates and ensure your orders are delivered to the correct location.</string>
+    	<key>NSLocationAlwaysUsageDescription</key>
+    	<string>This app needs access to your location in the background to provide accurate delivery updates and ensure your orders are delivered to the correct location.</string>
+    	<key>NSLocationWhenInUseUsageDescription</key>
+    	<string>This app needs access to your location to provide accurate pickup and delivery locations, and to help our delivery partners navigate to your doorstep.</string>
+    	<key>NSMicrophoneUsageDescription</key>
+    	<string>This app needs access to your microphone to enable voice commands and provide a better user experience.</string>
+    	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>This app requires access to your photo library to select images for profile pictures and other user content.</string>
+
+
 	<key>NSCalendarsUsageDescription</key>
 	<string>$this app needs access to your calender to pick a date.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>$this app needs access to your camera for click picture and save.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background and We are using location to get nearby loaction.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background and We are using location to get nearby location.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and We are using location to get nearby location.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>$this app needs access to your microphone for video.</string>
+
 	<key>NSMotionUsageDescription</key>
 	<string>$this app needs access to your motion in video </string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Open gallery for image selection</string>
+
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$this app needs access to your speech recognition in video</string>
 	<key>UIBackgroundModes</key>
