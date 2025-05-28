@@ -70,13 +70,13 @@ class _SplashScreenState extends BaseRouteState<SplashScreen> {
                           'assets/logo_splash.png',
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(top: 20),
-                      //   child: Text(
-                      //     AppLocalizations.of(context)!.lbl_gofresha,
-                      //     style: const TextStyle(color: Colors.white, fontSize: 22),
-                      //   ),
-                      // ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          AppLocalizations.of(context)!.lbl_loading,
+                          style: const TextStyle(color: Colors.white, fontSize: 22),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -88,7 +88,7 @@ class _SplashScreenState extends BaseRouteState<SplashScreen> {
                   child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(style: const TextStyle(color: Colors.white, fontSize: 18), children: [
-                        TextSpan(text: AppLocalizations.of(context)!.txt_welcome_to),
+                        TextSpan(text: AppLocalizations.of(context)!.txt_welcome_to +' '),
                         TextSpan(
                           text: AppLocalizations.of(context)!.lbl_gofresha,
                           style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18),
@@ -125,13 +125,13 @@ class _SplashScreenState extends BaseRouteState<SplashScreen> {
       // We execute this functions in parallel and store the results into configResults
       final List<dynamic> configResults = await Future.wait([
         _getMapBox(),
-        FirebaseMessaging.instance.getToken(),
-        _getCurrency(),
+// _getToken(),
+  _getCurrency(),
         br.checkConnectivity()
       ]);
 
-      global.appDeviceId = configResults[1];
-      bool isConnected = configResults[3];
+      // global.appDeviceId = configResults[1];
+      bool isConnected = configResults[2];
 
       if (isConnected) {
         if (global.sp.getString('currentUser') != null) {
@@ -158,6 +158,7 @@ class _SplashScreenState extends BaseRouteState<SplashScreen> {
                 o: widget.observer,
               )));
         }
+        _getToken();
       } else {
         showNetworkErrorSnackBar(_scaffoldKey);
       }
@@ -171,7 +172,19 @@ class _SplashScreenState extends BaseRouteState<SplashScreen> {
     super.initState();
     init();
   }
-
+_getToken(){
+  try {
+    FirebaseMessaging.instance.getToken().then((token) {
+      if (token != null) {
+        global.appDeviceId = token;
+         
+      }
+    });
+  } catch (e) {
+    debugPrint("Exception - splash_screen.dart - _getToken(): $e");
+  }
+ 
+}
   _getCurrency() async {
     try {
       bool isConnected = await br.checkConnectivity();

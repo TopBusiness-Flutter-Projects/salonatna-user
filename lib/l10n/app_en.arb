@@ -939,6 +939,8 @@
     "@lbl_account_deletion": {
         "description": "Account deletion"
     },
+    "lbl_loading": "Loading ...",
+
     "lbl_account_deletion_confirmation": "Are you sure you want to delete your account?",
     "@lbl_account_deletion_confirmation": {
         "description": "Are you sure you want to delete your account?"

@@ -234,5 +234,6 @@
 "txt_delete_account": "احذف حساب المستخدم الخاص بك",
 "btn_delete": "حذف",
 "lbl_account_deletion": "حذف الحساب",
+"lbl_loading": "جاري التحمبل ...",
 "lbl_account_deletion_confirmation": "هل أنت متأكد أنك تريد حذف حسابك؟"
 }
