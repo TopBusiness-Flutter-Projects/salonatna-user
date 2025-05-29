@@ -323,26 +323,26 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> deleteAccount(int? userId) async {
-    try {
-      if(userId == null) {
-        throw "Empty user id passed to deleteAcccount()";
-      }
+    Future<dynamic> deleteAccount(int? userId) async {
+      try {
+        if(userId == null) {
+          throw "Empty user id passed to deleteAcccount()";
+        }
 
-      final response = await http.post(
-        Uri.parse("${global.baseUrl}delete_all_user_data"),
-        headers: await global.getApiHeaders(true),
-        body: json.encode({"id": userId})
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        final response = await http.post(
+          Uri.parse("${global.baseUrl}delete_all_user_data"),
+          headers: await global.getApiHeaders(true),
+          body: json.encode({"id": userId})
+        );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
-      dynamic recordList;
-      if(response.statusCode == 200) {
-        return getAPIResult(response, recordList);
+        dynamic recordList;
+        if(response.statusCode == 200) {
+          return getAPIResult(response, recordList);
+        }
+      } catch (e) {
+        debugPrint("Exception - deleteAccount(): $e");
       }
-    } catch (e) {
-      debugPrint("Exception - deleteAccount(): $e");
     }
-  }
 
   Future<dynamic> delFromCart(int? userId, int? productId) async {
     try {

@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:801469931657:android:396a4ba7167877a185a658",
+        "android_client_info": {
+          "package_name": "net.topbusiness.salonatnauser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801469931657-4tn9s2bd69e11p4rrdgtpsuphsda57t3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0U_wmLALvf8vt3K-5j9djsjqXnlPAoBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801469931657-4tn9s2bd69e11p4rrdgtpsuphsda57t3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "801469931657-4jnjtqmg7454eh49uqer5cqpo049e6nn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.topbusiness.salonypartner"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:801469931657:android:310a6d067469780985a658",
         "android_client_info": {
           "package_name": "net.topbusiness.salonypartner"
@@ -57,6 +93,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "801469931657-68quh5on5p36hiipfevrfvvva61ipgdo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.topbusiness.salonyuser",
+            "certificate_hash": "4a17c7c7a5aa274529f3804b357acd1cceb32f7e"
+          }
+        },
         {
           "client_id": "801469931657-khav8u1fheea5m086mobbd4rdd6i78l7.apps.googleusercontent.com",
           "client_type": 1,

@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC0U_wmLALvf8vt3K-5j9djsjqXnlPAoBw',
-    appId: '1:801469931657:android:edb820d78d0bbf3c85a658',
+    appId: '1:801469931657:android:396a4ba7167877a185a658',
     messagingSenderId: '801469931657',
     projectId: 'salony-new',
     storageBucket: 'salony-new.firebasestorage.app',
@@ -63,6 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '801469931657',
     projectId: 'salony-new',
     storageBucket: 'salony-new.firebasestorage.app',
+    androidClientId: '801469931657-68quh5on5p36hiipfevrfvvva61ipgdo.apps.googleusercontent.com',
+    iosClientId: '801469931657-prfnf03f5meaurg2bultuvg3npia40fk.apps.googleusercontent.com',
     iosBundleId: 'net.topbusiness.salonyuser',
   );
+
 }

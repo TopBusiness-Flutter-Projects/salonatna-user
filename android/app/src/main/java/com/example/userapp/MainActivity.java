@@ -1,4 +1,4 @@
-package net.topbusiness.salonyuser;
+package net.topbusiness.salonatnauser;
 
 import io.flutter.embedding.android.FlutterActivity;
 

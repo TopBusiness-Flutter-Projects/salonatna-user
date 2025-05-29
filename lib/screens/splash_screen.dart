@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:app/models/businessLayer/base_route.dart';
 import 'package:app/models/businessLayer/global.dart' as global;
 import 'package:app/models/user_model.dart';
@@ -12,14 +11,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-
 class SplashScreen extends BaseRoute {
   const SplashScreen({super.key, super.a, super.o}) : super(r: 'SplashScreen');
-
   @override
   BaseRouteState<SplashScreen> createState() => _SplashScreenState();
 }
-
 class _SplashScreenState extends BaseRouteState<SplashScreen> {
   GlobalKey<ScaffoldState>? _scaffoldKey;
   bool isloading = true;
