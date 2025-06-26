@@ -338,8 +338,9 @@ class _BookingManagementScreenState extends BaseRouteState<BookingManagementScre
       bool isConnected = await br.checkConnectivity();
       if (isConnected) {
         await apiHelper!.getCancelReasons().then((result) {
+          debugPrint("result: $result");
           if (result != null) {
-            if (result.status == "1") {
+            if (result.status == "1") {              
               _cancelReasonsList = result.data;
               _isDataLoaded = true;
               setState(() {});

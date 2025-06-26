@@ -87,9 +87,9 @@ class _ForgotPasswordScreenState extends BaseRouteState<ForgotPasswordScreen> {
                             o: widget.observer,
                             screenId: 2,
                             phoneNumberOrEmail: _cEmail.text.trim(),
+                            phoneCodeintl2: "",
                           )),
                 );
-
                 setState(() {});
               } else {
                 hideLoader();

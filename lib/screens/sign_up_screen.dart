@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class SignUpScreen extends BaseRoute {
   final String? appleId;
@@ -173,27 +174,55 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
                         _fMobile.requestFocus();
                       },
                     )),
-                Container(
-                    margin: const EdgeInsets.only(top: 15),
-                    height: 50,
-                    child: TextFormField(
-                      textAlign: TextAlign.start,
-                      autofocus: false,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(_phoneNumberLength),
-                      ],
-                      keyboardType: TextInputType.number,
-                      cursorColor: const Color(0xFFFA692C),
-                      enabled: true,
-                      style: Theme.of(context).primaryTextTheme.titleLarge,
-                      controller: _cMobile,
-                      focusNode: _fMobile,
-                      decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lbl_mobile),
-                      onEditingComplete: () {
-                        _fPassword.requestFocus();
-                      },
-                    )),
+                // Container(
+                //     margin: const EdgeInsets.only(top: 15),
+                //     height: 50,
+                //     child: TextFormField(
+                //       textAlign: TextAlign.start,
+                //       autofocus: false,
+                //       inputFormatters: [
+                //         FilteringTextInputFormatter.digitsOnly,
+                //         LengthLimitingTextInputFormatter(_phoneNumberLength),
+                //       ],
+                //       keyboardType: TextInputType.number,
+                //       cursorColor: const Color(0xFFFA692C),
+                //       enabled: true,
+                //       style: Theme.of(context).primaryTextTheme.titleLarge,
+                //       controller: _cMobile,
+                //       focusNode: _fMobile,
+                //       decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lbl_mobile),
+                //       onEditingComplete: () {
+                //         _fPassword.requestFocus();
+                //       },
+                //     )),
+                       Container(
+                      margin: EdgeInsets.only(top: 15),
+                      // height: 50,
+                      child: IntlPhoneField(
+                        decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lbl_mobile),
+                        controller: _cMobile,
+                        initialCountryCode: 'EG',
+                        showCountryFlag: false,
+                        onCountryChanged: (country) {
+                          phoneCodeintl = '+' + country.fullCountryCode;
+                          print("sssssssssssss$phoneCodeintl");
+
+                          print("sssssssssssss$phoneCodeintl");
+                        },
+                        onChanged: (phone) {
+                          print(phone.completeNumber);
+                        },
+                        textAlign: TextAlign.start,
+                        autofocus: false,
+                        cursorColor: Color(0xFFF36D86),
+                        enabled: true,
+                        
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.number,
+                           style: Theme.of(context).primaryTextTheme.titleLarge,
+                        focusNode: _fMobile,
+                      ),
+                    ),
                 Container(
                     margin: const EdgeInsets.only(top: 15),
                     height: 50,
@@ -341,12 +370,12 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
     _cEmail.text = widget.email != null ? widget.email! : '';
     _cName.text = widget.name != null ? widget.name! : '';
   }
-
+ String phoneCodeintl = '+20';
   _sendOTP(String phoneNumber) async {
-    log("phoneNumber: +20$phoneNumber");
+    log("phoneNumber: $phoneCodeintl$phoneNumber");
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+20$phoneNumber',
+        phoneNumber: '$phoneCodeintl$phoneNumber',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           hideLoader();
@@ -361,6 +390,7 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
                       o: widget.observer,
                       verificationId: verificationId,
                       phoneNumberOrEmail: phoneNumber,
+                      phoneCodeintl2: phoneCodeintl,
                     )),
           );
         },
@@ -444,7 +474,7 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
         if (isConnected) {
           showOnlyLoaderDialog();
           await apiHelper!.signUp(user).then((result) async {    
-            log("result: $result");        
+           
             if (result != null) {
               if (result.status.toString() == "1") {
                 hideLoader();
@@ -453,7 +483,8 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
                 hideLoader();
                 showSnackBar(key: _scaffoldKey, snackBarMessage: result.message.toString());
               }
-            }
+            }else{
+              hideLoader();}
           });
         } else {
           showNetworkErrorSnackBar(_scaffoldKey);

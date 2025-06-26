@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -48,33 +49,61 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                   padding: const EdgeInsets.only(top: 20),
                   child: Text(AppLocalizations.of(context)!.txt_you_will_receive_otp_on_this_number, textAlign: TextAlign.center, style: Theme.of(context).primaryTextTheme.displaySmall),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 70.0),
-                  child: TextFormField(
-                    textAlign: TextAlign.start,
-                    autofocus: false,
-                    cursorColor: const Color(0xFFFA692C),
-                    enabled: true,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(10),
-                    ],
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.number,
-                    style: Theme.of(context).primaryTextTheme.titleLarge,
+                    Container(
+                      margin: EdgeInsets.only(top: 70),
+                      // height: 50,
+                      child: IntlPhoneField(
+                        decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lbl_mobile),
                     controller: _cPhoneNumber,
+                        initialCountryCode: 'EG',
+                        showCountryFlag: false,
+                        onCountryChanged: (country) {
+                          phoneCodeintl = '+' + country.fullCountryCode;
+                          print("sssssssssssss$phoneCodeintl");
+
+                          print("sssssssssssss$phoneCodeintl");
+                        },
+                        onChanged: (phone) {
+                          print(phone.completeNumber);
+                        },
+                        textAlign: TextAlign.start,
+                        autofocus: false,
+                        cursorColor: Color(0xFFF36D86),
+                        enabled: true,
+                        
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.number,
+                           style: Theme.of(context).primaryTextTheme.titleLarge,
                     focusNode: _fPhoneNumber,
-                    maxLength: 10,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.lbl_phone_number,
-                      counterText: '',
-                      prefixIcon: const Icon(Icons.email),
+                      ),
                     ),
-                    onEditingComplete: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 70.0),
+                //   child: TextFormField(
+                //     textAlign: TextAlign.start,
+                //     autofocus: false,
+                //     cursorColor: const Color(0xFFFA692C),
+                //     enabled: true,
+                //     inputFormatters: [
+                //       FilteringTextInputFormatter.digitsOnly,
+                //       LengthLimitingTextInputFormatter(10),
+                //     ],
+                //     textInputAction: TextInputAction.done,
+                //     keyboardType: TextInputType.number,
+                //     style: Theme.of(context).primaryTextTheme.titleLarge,
+                //     controller: _cPhoneNumber,
+                //     focusNode: _fPhoneNumber,
+                //     maxLength: 10,
+                //     decoration: InputDecoration(
+                //       hintText: AppLocalizations.of(context)!.lbl_phone_number,
+                //       counterText: '',
+                //       prefixIcon: const Icon(Icons.email),
+                //     ),
+                //     onEditingComplete: () {
+                //       FocusScope.of(context).unfocus();
+                //     },
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 70.0),
                   child: ElevatedButton(
@@ -196,11 +225,12 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
       debugPrint("Exception - add_phone_screen.dart - _showCupertinoModalSheet():$e");
     }
   }
+ String phoneCodeintl = '+20';
 
   _sendOTP(String phoneNumber) async {
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+20$phoneNumber',
+        phoneNumber: '$phoneCodeintl$phoneNumber',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           hideLoader();
@@ -216,6 +246,7 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                       screenId: 1,
                       verificationId: verificationId,
                       phoneNumberOrEmail: phoneNumber,
+                      phoneCodeintl2: phoneCodeintl,
                     )),
           );
         },

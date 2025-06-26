@@ -7,7 +7,7 @@ class CancelReasons {
 
   CancelReasons.fromJson(Map<String, dynamic> json) {
     try {
-      resId = json['res_id'] != null ? int.parse(json['res_id']) : null;
+      resId = json['res_id'] ;
       reason = json['reason'];
     } catch (e) {
       debugPrint("Exception - cancelReasonsModel.dart - CancelReasons.fromJson():$e");

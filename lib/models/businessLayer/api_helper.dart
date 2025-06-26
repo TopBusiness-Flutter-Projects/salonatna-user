@@ -383,6 +383,7 @@ class APIHelper {
       debugPrint("Exception - forgotPassword(): $e");
     }
   }
+  
 
   Future<dynamic> getAllBookings(int? userId) async {
     try {
@@ -459,12 +460,11 @@ class APIHelper {
     try {
       Response response;
       var dio = Dio();
-
-      response = await dio.get('${global.baseUrl}cancel_reasons',
-        
+      response = await dio.get('${global.baseUrl}cancel_reasons',        
           options: Options(
             headers: await global.getApiHeaders(true),
-          ));log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+          ));
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200 && response.data["status"] == "1") {
         recordList = List<CancelReasons>.from(response.data["data"].map((x) => CancelReasons.fromJson(x)));
@@ -1100,6 +1100,7 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     try {
       Response response;
       var dio = Dio();
+      log("user: ${user.toJson()}");
       var formData = FormData.fromMap({
         'user_name': user.username,
         'user_email': user.userEmail,
@@ -1123,7 +1124,7 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
       } else {
         recordList = null;
       }
-      return getDioResult(response, recordList);
+     return getDioResult(response, recordList);
     } catch (e) {
       debugPrint("Exception - signUp(): $e");
     }

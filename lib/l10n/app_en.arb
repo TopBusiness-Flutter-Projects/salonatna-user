@@ -651,6 +651,10 @@
     "@lbl_overall_rating": {
         "description": "Overall Rating"
     },
+    "service_way_choose": "Choose Service Method",
+"price_out_desc": "The out-of-salon price does not include transportation",
+"out_salon": "Private",
+"in_salon": "In Salon",
     "lbl_price": "Price",
     "@lbl_price": {
         "description": "Price"
