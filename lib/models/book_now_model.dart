@@ -7,6 +7,7 @@ class BookNow {
   int? userId;
   int? vendorId;
   int? staffId;
+  int? inSalon;
   String? totalPrice;
   String? remPrice;
   String? paymentMethod;
@@ -42,6 +43,7 @@ class BookNow {
         'payment_gateway': paymentGateway,
         'cart_id': cartId,
         'lang': lang,
+        "in_salon": inSalon,
       };
 
   BookNow.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,7 @@ class BookNow {
       paymentId = json['payment_id'];
       deliveryDate = json['delivery_date'];
       timeSlot = json['time_slot'];
+      inSalon = json['in_salon'] != null ? int.parse('${json['in_salon']}') : null;
     } catch (e) {
       debugPrint("Exception - BookNowModel.dart - BookNow.fromJson():$e");
     }

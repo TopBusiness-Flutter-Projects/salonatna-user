@@ -5,6 +5,7 @@ class ServiceType {
   int? serviceId;
   String? variant;
   int? price;
+  int? priceOut;
   int? time;
   String? serviceName;
   int? vendorId;
@@ -19,6 +20,7 @@ class ServiceType {
       time = json['time'] != null ? int.parse('${json['time']}') : null;
       // vendor_id = json['vendor_id'] != null ? json['vendor_id'] : null;
       price = json['price'] != null ? int.parse('${json['price']}') : null;
+      priceOut = json['price_out'] != null ? int.parse('${json['price_out']}') : null;
       serviceName = json['service_name'];
       vendorId = json['vendor_id'] != null ? int.parse('${json['vendor_id']}') : null;
     } catch (e) {

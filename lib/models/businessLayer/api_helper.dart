@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:app/models/all_bookings_model.dart';
 import 'package:app/models/banner_model.dart';
 import 'package:app/models/barber_shop_desc_model.dart';
@@ -147,13 +146,16 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> bookAppointment(int? vendorId) async {
+  Future<dynamic> bookAppointment(int? vendorId , {
+   required int inSalon ,
+  }) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}booking_appointment"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"vendor_id": vendorId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({"vendor_id": vendorId, "in_salon" : inSalon, "lang": global.languageCode}),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
@@ -322,19 +324,16 @@ class APIHelper {
       debugPrint("Exception - deleteAllNotifications(): $e");
     }
   }
-
-    Future<dynamic> deleteAccount(int? userId) async {
+     Future<dynamic> deleteAccount(int? userId) async {
       try {
         if(userId == null) {
           throw "Empty user id passed to deleteAcccount()";
         }
-
         final response = await http.post(
           Uri.parse("${global.baseUrl}delete_all_user_data"),
           headers: await global.getApiHeaders(true),
           body: json.encode({"id": userId})
         );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
-
         dynamic recordList;
         if(response.statusCode == 200) {
           return getAPIResult(response, recordList);
@@ -1236,7 +1235,6 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
       debugPrint("Exception - verifyOtpAfterRegistration(): $e");
     }
   }
-
   Future<dynamic> verifyOtpForgotPassword(String? userEmail, String otp) async {
     try {
       final response = await http.post(
@@ -1257,3 +1255,4 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     }
   }
 }
+

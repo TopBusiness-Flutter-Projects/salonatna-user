@@ -420,134 +420,154 @@ class _BarberShopDescriptionScreenState
                                                       o: widget.observer,
                                                     )),
                                           )
-                                        :
-                                        showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    return Theme(
-      data: ThemeData(dialogBackgroundColor: Colors.white),
-      child: AlertDialog(
-        title: Text(
-          AppLocalizations.of(context)!.service_way_choose,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        content: Container(
-          margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
-          child: Text(
-           AppLocalizations.of(context)!.price_out_desc  ,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        actions: <Widget>[
-               ElevatedButton(
-                style: ElevatedButton.styleFrom( 
-                  backgroundColor: const Color(0xFFFA692C), 
-                ),
-                                     onPressed: () {
-                                                      Navigator.of(context)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                BookAppointmentScreen(
-                                                                  widget
-                                                                      .vendorId,
-                                                                  a: widget
-                                                                      .analytics,
-                                                                  o: widget
-                                                                      .observer,
-                                                                )),
-                                                      );
-                                                    },
-                      child:  Text( AppLocalizations.of(context)!.out_salon,
-                          style: TextStyle(color: Colors.white))),
-                          ElevatedButton(
-                style: ElevatedButton.styleFrom( 
-                  backgroundColor: const Color(0xFFFA692C), 
-                ),
-                                onPressed: () {
-                                                      Navigator.of(context)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                BookAppointmentScreen(
-                                                                  widget
-                                                                      .vendorId,
-                                                                  a: widget
-                                                                      .analytics,
-                                                                  o: widget
-                                                                      .observer,
-                                                                )),
-                                                      );
-                                                    },
-                      child:  Text( AppLocalizations.of(context)!.in_salon,
-                          style: TextStyle(color: Colors.white))),
-         
-        ],
-      ),
-    );
-  },
-);
+                                        : showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Theme(
+                                                data: ThemeData(
+                                                    dialogBackgroundColor:
+                                                        Colors.white),
+                                                child: AlertDialog(
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .service_way_choose,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                  content: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 5,
+                                                            left: 10,
+                                                            right: 10),
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .price_out_desc,
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                  0xFFFA692C),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pushReplacement(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        BookAppointmentScreen(
+                                                                          widget
+                                                                              .vendorId,
+                                                                          a: widget
+                                                                              .analytics,
+                                                                          o: widget
+                                                                              .observer,
+                                                                              inSalon: 0,
+                                                                        )),
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .out_salon,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white))),
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                  0xFFFA692C),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pushReplacement(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        BookAppointmentScreen(
+                                                                          widget
+                                                                              .vendorId,
+                                                                          a: widget
+                                                                              .analytics,
+                                                                          o: widget
+                                                                              .observer,
+                                                                              inSalon: 1,
+                                                                        )),
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .in_salon,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white))),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
 
-                                      
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        //  showDialog(
-                                        //     context: context,
-                                        //     builder: (context) => AlertDialog(
-                                        //       title: Text('اختر طريقة الخدمة'),
-                                        //       content: Text(
-                                        //           'السعر خارج الصالون لا يشمل المواصلات'),
-                                        //       actions: [
-                                        //         TextButton(
-                                        //             onPressed: () {
-                                        //               Navigator.of(context)
-                                        //                   .push(
-                                        //                 MaterialPageRoute(
-                                        //                     builder: (context) =>
-                                        //                         BookAppointmentScreen(
-                                        //                           widget
-                                        //                               .vendorId,
-                                        //                           a: widget
-                                        //                               .analytics,
-                                        //                           o: widget
-                                        //                               .observer,
-                                        //                         )),
-                                        //               );
-                                        //             },
-                                        //             child:
-                                        //                 Text('داخل الصالون')),
-                                        //         TextButton(
-                                        //             onPressed: () {
-                                        //               Navigator.of(context)
-                                        //                   .push(
-                                        //                 MaterialPageRoute(
-                                        //                     builder: (context) =>
-                                        //                         BookAppointmentScreen(
-                                        //                           widget
-                                        //                               .vendorId,
-                                        //                           a: widget
-                                        //                               .analytics,
-                                        //                           o: widget
-                                        //                               .observer,
-                                        //                         )),
-                                        //               );
-                                        //             },
-                                        //             child: Text('برايفت')),
-                                        //       ],
-                                        //     ),
-                                        //   );
-                                  
+                                    //  showDialog(
+                                    //     context: context,
+                                    //     builder: (context) => AlertDialog(
+                                    //       title: Text('اختر طريقة الخدمة'),
+                                    //       content: Text(
+                                    //           'السعر خارج الصالون لا يشمل المواصلات'),
+                                    //       actions: [
+                                    //         TextButton(
+                                    //             onPressed: () {
+                                    //               Navigator.of(context)
+                                    //                   .push(
+                                    //                 MaterialPageRoute(
+                                    //                     builder: (context) =>
+                                    //                         BookAppointmentScreen(
+                                    //                           widget
+                                    //                               .vendorId,
+                                    //                           a: widget
+                                    //                               .analytics,
+                                    //                           o: widget
+                                    //                               .observer,
+                                    //                         )),
+                                    //               );
+                                    //             },
+                                    //             child:
+                                    //                 Text('داخل الصالون')),
+                                    //         TextButton(
+                                    //             onPressed: () {
+                                    //               Navigator.of(context)
+                                    //                   .push(
+                                    //                 MaterialPageRoute(
+                                    //                     builder: (context) =>
+                                    //                         BookAppointmentScreen(
+                                    //                           widget
+                                    //                               .vendorId,
+                                    //                           a: widget
+                                    //                               .analytics,
+                                    //                           o: widget
+                                    //                               .observer,
+                                    //                         )),
+                                    //               );
+                                    //             },
+                                    //             child: Text('برايفت')),
+                                    //       ],
+                                    //     ),
+                                    //   );
                                   },
                                   child: Text(
                                       _currentIndex == 0
@@ -599,7 +619,6 @@ class _BarberShopDescriptionScreenState
     _tabController!.dispose();
     super.dispose();
   }
-
   @override
   void initState() {
     super.initState();
@@ -608,7 +627,6 @@ class _BarberShopDescriptionScreenState
     _tabController!.addListener(_tabControllerListener);
     _init();
   }
-
   Widget _aboutWidget() {
     try {
       return SingleChildScrollView(
@@ -1523,12 +1541,13 @@ class _BarberShopDescriptionScreenState
                                             ),
                                             SizedBox(
                                                 width: 90,
-                                                child: AutoSizeText(
-                                                    ' ${global.currency.currencySign} ${_barberShopDesc!.services[index].serviceType[i].price} - ${_barberShopDesc!.services[index].serviceType[i].price}',
-                                                         maxLines: 1,  
-                                                         minFontSize: 10,   style: TextStyle(
+                                                child: AutoSizeText(_barberShopDesc!.services[index].serviceType[i].priceOut != null?
+                                                    ' ${global.currency.currencySign} ${_barberShopDesc!.services[index].serviceType[i].price} - ${_barberShopDesc!.services[index].serviceType[i].priceOut}':
+                                                    ' ${global.currency.currencySign} ${_barberShopDesc!.services[index].serviceType[i].price} ',
+                                                    maxLines: 1,
+                                                    minFontSize: 10,
+                                                    style: TextStyle(
                                                         fontSize: 12,
-                                              
                                                         color: Theme.of(context)
                                                             .primaryColor,
                                                         fontWeight:
