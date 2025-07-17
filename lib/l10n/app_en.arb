@@ -503,6 +503,8 @@
     "@lbl_gallery": {
         "description": "Gallery"
     },
+    "are_you_sure_exit_pay": "Are you sure you want to exit the payment process?",
+    "lbl_paymob":"PayMob",
     "lbl_book_appointment": "Book Appointment",
     "@lbl_book_appointment": {
         "description": "Book Appointment"

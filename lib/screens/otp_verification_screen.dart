@@ -252,7 +252,8 @@ class _OTPVerificationScreenState
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                               onTap: () async {
-                                await _getOTP(widget.phoneNumberOrEmail);
+                                
+                                await _getOTP(widget.phoneCodeintl2 + (widget.phoneNumberOrEmail ?? ''));
                               },
                               child: Text(
                                   _seconds != 0
@@ -578,7 +579,7 @@ class _OTPVerificationScreenState
           showOnlyLoaderDialog();
           await apiHelper!
               .verifyOtpAfterRegistration(
-                  widget.phoneNumberOrEmail, status, null, global.appDeviceId)
+                widget.phoneCodeintl2 + (widget.phoneNumberOrEmail ?? ''), status, null, global.appDeviceId)
               .then((result) async {
             if (result != null) {
               if (result.status == "1") {

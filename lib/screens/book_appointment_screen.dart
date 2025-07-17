@@ -148,7 +148,7 @@ class _BookAppointmentScreenState
                                                 screenId: 1,
                                               )),
                                     );
-                                    return true;
+                                       return false; // Don't dismiss the item;
                                   },
                                   child: Row(
                                     children: [
@@ -759,7 +759,6 @@ class _BookAppointmentScreenState
  log("BookNow Details: ${bookNow.toJson()}");
 log ("serviceTypeVariantId: ${bookNow.serviceTypeVariantIdList[0].variantId}");
 log ("serviceTypeServiceId: ${bookNow.serviceTypeVariantIdList[0].serviceId}");
-
       bool isConnected = await br.checkConnectivity();
       if (isConnected) {
         await apiHelper!.bookNow(bookNow).then((result) async {

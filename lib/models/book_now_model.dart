@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class BookNow {
   int? id;
+  int? orderId;
   String? cartId;
   int? userId;
   int? vendorId;
@@ -22,6 +23,7 @@ class BookNow {
   String? rewardUse;
   String? rewardDiscount;
   String? paymentGateway;
+  String? paymentUrl;
   String? paymentId;
   String? deliveryDate;
   String? timeSlot;
@@ -33,6 +35,7 @@ class BookNow {
   Map<String, dynamic> toJson() => {
         'order_array': serviceTypeVariantIdList,
         'user_id': userId,
+        'order_id': orderId,
         'delivery_date': deliveryDate,
         'time_slot': timeSlot,
         'vendor_id': vendorId,
@@ -41,6 +44,7 @@ class BookNow {
         'payment_status': paymentStatus,
         'payment_id': paymentId,
         'payment_gateway': paymentGateway,
+        "payment_url": paymentUrl,
         'cart_id': cartId,
         'lang': lang,
         "in_salon": inSalon,
@@ -50,6 +54,7 @@ class BookNow {
     try {
       id = json['id'] != null ? int.parse('${json['id']}') : null;
       cartId = json['cart_id'];
+      orderId = json['order_id'];
       userId = json['user_id'] != null ? int.parse('${json['user_id']}') : null;
       vendorId = json['vendor_id'] != null ? int.parse('${json['vendor_id']}') : null;
       staffId = json['staff_id'] != null ? int.parse('${json['staff_id']}') : null;
@@ -67,6 +72,7 @@ class BookNow {
       mobile = json['mobile'];
       couponId = json['coupon_id'] != null ? int.parse('${json['coupon_id']}') : null;
       paymentGateway = json['payment_gateway'];
+      paymentUrl = json['payment_url'];
       paymentId = json['payment_id'];
       deliveryDate = json['delivery_date'];
       timeSlot = json['time_slot'];

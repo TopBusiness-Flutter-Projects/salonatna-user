@@ -188,6 +188,7 @@
 "lbl_other_methods": "طرق أخرى",
 "lbl_rezorpay": "رازور باي",
 "lbl_stripe": "سترايب",
+"lbl_paymob": "باي موب",
 "lbl_paystack": "باي ستاك",
 "lbl_transaction_successful": "تمت العملية بنجاح",
 "lbl_transaction_failed": "فشلت العملية.",
@@ -224,6 +225,8 @@
 "txt_everything_is_ready": "كل شيء جاهز.",
 "txt_you_will_receive_a_confirmation_email_with_your_appointment": "ستتلقى رسالة تأكيد عبر البريد الإلكتروني تحتوي على تفاصيل موعدك",
 "lbl_search": "بحث",
+"are_you_sure_exit_pay": "هل أنت متأكد أنك تريد الخروج من عملية الدفع؟"
+,
 "lbl_barbershops": "صالونات الحلاقة",
 "lbl_barbershop_600": "صالون حلاقة (600)",
 "lbl_notification": "الإشعارات",

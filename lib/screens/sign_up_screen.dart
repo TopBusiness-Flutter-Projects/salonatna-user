@@ -453,7 +453,7 @@ class _SignUpScreenState extends BaseRouteState<SignUpScreen> {
 
       user.username = _cName.text.trim();
       user.userEmail = _cEmail.text.trim();
-      user.userPhone = _cMobile.text.trim();
+      user.userPhone =phoneCodeintl+ _cMobile.text.trim();
       user.userPassword = _cPassword.text.trim();
       user.userImage = _tImage;
       user.deviceId = global.appDeviceId;

@@ -10,6 +10,7 @@ import 'package:app/models/book_now_model.dart';
 import 'package:app/models/businessLayer/api_result.dart';
 import 'package:app/models/businessLayer/dio_result.dart';
 import 'package:app/models/businessLayer/global.dart' as global;
+import 'package:app/models/call_back_model.dart';
 import 'package:app/models/cancel_reason_model.dart';
 import 'package:app/models/cart_model.dart';
 import 'package:app/models/cookies_policy_model.dart';
@@ -246,8 +247,9 @@ class APIHelper {
   }
 
   Future<dynamic> checkOut(BookNow bookNow) async {
-    try {
+      try {
       bookNow.lang = global.languageCode;
+      log ("checkout model: ${bookNow.toJson()}" );
       final response = await http.post(
         Uri.parse("${global.baseUrl}checkout"),
         headers: await global.getApiHeaders(true),
@@ -255,8 +257,28 @@ class APIHelper {
       );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 && json.decode(response.body)["status"].toString() == "1") {
         recordList = BookNow.fromJson(json.decode(response.body)["data"]);
+      } else {
+        recordList = null;
+      }
+      return getAPIResult(response, recordList);
+    } catch (e) {
+      debugPrint("Exception - checkOut(): $e");
+    }
+  }
+  Future<dynamic> checkOutCallBack(int orderId) async {
+      try {
+      final response = await http.post(
+        Uri.parse("${global.baseUrl}checkout-callback"),
+        headers: await global.getApiHeaders(true),
+        body: json.encode({"order_id": orderId, }),
+      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+
+      dynamic recordList;
+      // if (response.statusCode == 200 ) {
+      if (response.statusCode == 200 && json.decode(response.body)["status"].toString() == "1") {
+        recordList = CallBackModel.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -1073,9 +1095,9 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
       debugPrint("Exception - privacyPolicy(): $e");
     }
   }
-
   Future<dynamic> productCartCheckout(int? userId, String paymentStatus, String paymentGateway, {String? paymentId}) async {
     try {
+      log( "sss userId: $userId, paymentStatus: $paymentStatus, paymentGateway: $paymentGateway, paymentId: $paymentId");
       final response = await http.post(
         Uri.parse("${global.baseUrl}product_cart_checkout"),
         headers: await global.getApiHeaders(true),

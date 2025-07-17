@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app/models/businessLayer/base_route.dart';
@@ -14,7 +15,8 @@ import 'package:mobile_number/mobile_number.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AddPhoneScreen extends BaseRoute {
-  const AddPhoneScreen({super.key, super.a, super.o}) : super(r: 'AddPhoneScreen');
+  const AddPhoneScreen({super.key, super.a, super.o})
+      : super(r: 'AddPhoneScreen');
 
   @override
   BaseRouteState<AddPhoneScreen> createState() => _AddPhoneScreenState();
@@ -47,36 +49,40 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
-                  child: Text(AppLocalizations.of(context)!.txt_you_will_receive_otp_on_this_number, textAlign: TextAlign.center, style: Theme.of(context).primaryTextTheme.displaySmall),
+                  child: Text(
+                      AppLocalizations.of(context)!
+                          .txt_you_will_receive_otp_on_this_number,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).primaryTextTheme.displaySmall),
                 ),
-                    Container(
-                      margin: EdgeInsets.only(top: 70),
-                      // height: 50,
-                      child: IntlPhoneField(
-                        decoration: InputDecoration(hintText: AppLocalizations.of(context)!.lbl_mobile),
+                Container(
+                  margin: EdgeInsets.only(top: 70),
+                  child: IntlPhoneField(
+                    decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.lbl_mobile),
                     controller: _cPhoneNumber,
-                        initialCountryCode: 'EG',
-                        showCountryFlag: false,
-                        onCountryChanged: (country) {
-                          phoneCodeintl = '+' + country.fullCountryCode;
-                          print("sssssssssssss$phoneCodeintl");
+                    initialCountryCode: 'EG',
+                    showCountryFlag: false,
+                    onCountryChanged: (country) {
+                      phoneCodeintl = '+' + country.fullCountryCode;
+                      print("sssssssssssss$phoneCodeintl");
 
-                          print("sssssssssssss$phoneCodeintl");
-                        },
-                        onChanged: (phone) {
-                          print(phone.completeNumber);
-                        },
-                        textAlign: TextAlign.start,
-                        autofocus: false,
-                        cursorColor: Color(0xFFF36D86),
-                        enabled: true,
-                        
-                        textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.number,
-                           style: Theme.of(context).primaryTextTheme.titleLarge,
+                      print("sssssssssssss$phoneCodeintl");
+                    },
+                    onChanged: (phone) {
+                      print(phone.completeNumber);
+                    },
+                    textAlign: TextAlign.start,
+                    autofocus: false,
+                    cursorColor: Color(0xFFF36D86),
+                    enabled: true,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    style: Theme.of(context).primaryTextTheme.titleLarge,
                     focusNode: _fPhoneNumber,
-                      ),
-                    ),
+                  ),
+                ),
+
                 // Padding(
                 //   padding: const EdgeInsets.only(top: 70.0),
                 //   child: TextFormField(
@@ -110,10 +116,8 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                       onPressed: () {
                         _loginWithPhone();
                       },
-                      child: Text(
-                        AppLocalizations.of(context)!.btn_send_otp,
-                        style: TextStyle(color: Colors.white)
-                      )),
+                      child: Text(AppLocalizations.of(context)!.btn_send_otp,
+                          style: TextStyle(color: Colors.white))),
                 ),
               ],
             ),
@@ -127,11 +131,15 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
     String mobileNumber = '';
     try {
       _simCard = (await MobileNumber.getSimCards!);
-      _simCard.removeWhere((e) => e.number == '' || e.number == null || e.number!.contains(RegExp(r'[A-Z]')));
+      _simCard.removeWhere((e) =>
+          e.number == '' ||
+          e.number == null ||
+          e.number!.contains(RegExp(r'[A-Z]')));
       if (_simCard.length > 1) {
         await _selectPhoneNumber();
       } else if (_simCard.isNotEmpty) {
-        mobileNumber = _simCard[0].number!.substring(_simCard[0].number!.length - 10);
+        mobileNumber =
+            _simCard[0].number!.substring(_simCard[0].number!.length - 10);
       }
     } on PlatformException catch (e) {
       debugPrint("Failed to get mobile number because of '${e.message}'");
@@ -166,10 +174,10 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
       CurrentUser tUser = CurrentUser();
       debugPrint(_cPhoneNumber.text.trim());
       debugPrint(global.appDeviceId);
-      tUser.userPhone = _cPhoneNumber.text.trim();
+      tUser.userPhone = phoneCodeintl + _cPhoneNumber.text.trim();
       tUser.deviceId = global.appDeviceId;
 
-      if (_cPhoneNumber.text.isNotEmpty && _cPhoneNumber.text.trim().length == 10) {
+      if (_cPhoneNumber.text.isNotEmpty) {
         bool isConnected = await br.checkConnectivity();
         if (isConnected) {
           showOnlyLoaderDialog();
@@ -179,7 +187,8 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                 await _sendOTP(_cPhoneNumber.text.trim());
               } else {
                 hideLoader();
-                showSnackBar(key: _scaffoldKey, snackBarMessage: '${result.message}');
+                showSnackBar(
+                    key: _scaffoldKey, snackBarMessage: '${result.message}');
               }
             }
           });
@@ -188,8 +197,12 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
         } else {
           showNetworkErrorSnackBar(_scaffoldKey);
         }
-      } else if (_cPhoneNumber.text.isEmpty || _cPhoneNumber.text.trim().length < 10) {
-        showSnackBar(key: _scaffoldKey, snackBarMessage: AppLocalizations.of(context)!.txt_please_enter_valid_contact_no);
+      } else if (_cPhoneNumber.text.isEmpty ||
+          _cPhoneNumber.text.trim().length < 10) {
+        showSnackBar(
+            key: _scaffoldKey,
+            snackBarMessage: AppLocalizations.of(context)!
+                .txt_please_enter_valid_contact_no);
       }
     } catch (e) {
       debugPrint("Exception - add_phone_screen.dart - _loginWithPhone():$e");
@@ -207,7 +220,8 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
                     child: Text(e.number!.substring(e.number!.length - 10)),
                     onPressed: () async {
                       setState(() {
-                        _cPhoneNumber.text = e.number!.substring(e.number!.length - 10);
+                        _cPhoneNumber.text =
+                            e.number!.substring(e.number!.length - 10);
                       });
                       Navigator.pop(context);
                     },
@@ -222,19 +236,25 @@ class _AddPhoneScreenState extends BaseRouteState<AddPhoneScreen> {
         ),
       );
     } catch (e) {
-      debugPrint("Exception - add_phone_screen.dart - _showCupertinoModalSheet():$e");
+      debugPrint(
+          "Exception - add_phone_screen.dart - _showCupertinoModalSheet():$e");
     }
   }
- String phoneCodeintl = '+20';
+
+  String phoneCodeintl = '+20';
 
   _sendOTP(String phoneNumber) async {
+    log("phoneNumberr :$phoneCodeintl$phoneNumber");
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '$phoneCodeintl$phoneNumber',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           hideLoader();
-          showSnackBar(key: _scaffoldKey, snackBarMessage: AppLocalizations.of(context)!.txt_please_try_again_after_sometime);
+          showSnackBar(
+              key: _scaffoldKey,
+              snackBarMessage: AppLocalizations.of(context)!
+                  .txt_please_try_again_after_sometime);
         },
         codeSent: (String verificationId, int? resendToken) async {
           hideLoader();
