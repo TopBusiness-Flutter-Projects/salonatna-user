@@ -10,11 +10,8 @@ class ProductCartCheckout {
   String? paymentId;
   String? paymentStatus;
   int? status;
-
   DateTime? createdAt;
-
   ProductCartCheckout();
-
   ProductCartCheckout.fromJson(Map<String, dynamic> json) {
     try {
       orderId = json['order_id'] != null ? int.parse('${json['order_id']}') : null;
