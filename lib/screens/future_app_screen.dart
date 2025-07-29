@@ -4,6 +4,7 @@ import 'package:app/models/businessLayer/base_route.dart';
 import 'package:app/models/future_app_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -92,16 +93,12 @@ class _FutureAppState extends BaseRouteState<FutureApp> {
                                         },
                                       ),
                                     )
-                                  : Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                3),
-                                        child: Text(AppLocalizations.of(
-                                                context)!
-                                            .txt_future_app_will_shown_here),
+                                  : Expanded(
+                                      child: Center(
+                                        child: Lottie.asset(
+                                          'assets/json/no task.json',
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                     )
                               : _shimmer()
