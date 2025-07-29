@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:app/models/all_bookings_model.dart';
 import 'package:app/models/banner_model.dart';
 import 'package:app/models/barber_shop_desc_model.dart';
@@ -17,6 +18,7 @@ import 'package:app/models/cookies_policy_model.dart';
 import 'package:app/models/coupons_model.dart';
 import 'package:app/models/currency_model.dart';
 import 'package:app/models/favorite_model.dart';
+import 'package:app/models/future_app_model.dart';
 import 'package:app/models/google_map_model.dart';
 import 'package:app/models/map_box_model.dart';
 import 'package:app/models/may_by_model.dart';
@@ -38,7 +40,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class APIHelper {
-  Future<dynamic> addSalonRating(int? userId, int? vendorId, double rating, String description) async {
+  Future<dynamic> addSalonRating(
+      int? userId, int? vendorId, double rating, String description) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}add_salon_rating"),
@@ -49,7 +52,8 @@ class APIHelper {
           "rating": rating,
           "description": description,
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         return getAPIResult(response, recordList);
@@ -59,7 +63,8 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> addStaffRating(int? userId, int? staffId, double rating, String description) async {
+  Future<dynamic> addStaffRating(
+      int? userId, int? staffId, double rating, String description) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}add_staff_rating"),
@@ -70,7 +75,8 @@ class APIHelper {
           "rating": rating,
           "description": description,
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200) {
@@ -86,12 +92,15 @@ class APIHelper {
       final response = await http.post(
         Uri.parse("${global.baseUrl}add_to_cart"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"user_id": userId, "product_id": productId, "qty": qty}),
+        body: json
+            .encode({"user_id": userId, "product_id": productId, "qty": qty}),
       );
 
-      dynamic recordList;log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      dynamic recordList;
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Cart.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -102,16 +111,40 @@ class APIHelper {
     }
   }
 
+  Future<dynamic> getFutureApps() async {
+    try {
+      final response = await http.get(
+        Uri.parse("${global.baseUrl}get-other-apps"),
+        headers: await global.getApiHeaders(false),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      dynamic recordList;
+      log('status ${json.decode(response.body)["status"]}');
+      log('status ${json.decode(response.body)["status"]}');
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = FutureAppModel.fromJson(json.decode(response.body));
+      } else {
+        recordList = null;
+      }
+      return getAPIResult(response, recordList);
+    } catch (e) {
+      debugPrint("Exception - getFutureApp(): $e");
+    }
+  }
+
   Future<dynamic> addToFavorite(int? userId, int? productId) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}add_to_fav"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "product_id": productId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Favorites.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -122,7 +155,8 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> applyRewardsAndCoupons(String? cartId, String type, {String? couponCode}) async {
+  Future<dynamic> applyRewardsAndCoupons(String? cartId, String type,
+      {String? couponCode}) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}apply_coupon_or_rewards"),
@@ -131,12 +165,13 @@ class APIHelper {
           "cart_id": cartId,
           "type": type,
           "coupon_code": couponCode,
-          
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = BookNow.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -147,20 +182,27 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> bookAppointment(int? vendorId , {
-   required int inSalon ,
+  Future<dynamic> bookAppointment(
+    int? vendorId, {
+    required int inSalon,
   }) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}booking_appointment"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"vendor_id": vendorId, "in_salon" : inSalon, "lang": global.languageCode}),
+        body: json.encode({
+          "vendor_id": vendorId,
+          "in_salon": inSalon,
+          "lang": global.languageCode
+        }),
       );
       log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = BookAppointment.fromJson(json.decode(response.body)["data"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList =
+            BookAppointment.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -177,10 +219,12 @@ class APIHelper {
         Uri.parse("${global.baseUrl}book_now"),
         headers: await global.getApiHeaders(true),
         body: json.encode(bookNow),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = BookNow.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -198,7 +242,8 @@ class APIHelper {
         Uri.parse("${global.baseUrl}cancel_booking"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"cart_id": cartId, "reason": reason}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200) {
@@ -215,7 +260,8 @@ class APIHelper {
         Uri.parse("${global.baseUrl}cancel_product_orders"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"cart_id": cartId, "reason": reason}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200) {
@@ -231,11 +277,14 @@ class APIHelper {
       final response = await http.post(
         Uri.parse("${global.baseUrl}change_password"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"user_email": userEmail, "user_password": userPassword}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json
+            .encode({"user_email": userEmail, "user_password": userPassword}),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && jsonDecode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          jsonDecode(response.body)["status"] == "1") {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -247,17 +296,19 @@ class APIHelper {
   }
 
   Future<dynamic> checkOut(BookNow bookNow) async {
-      try {
+    try {
       bookNow.lang = global.languageCode;
-      log ("checkout model: ${bookNow.toJson()}" );
+      log("checkout model: ${bookNow.toJson()}");
       final response = await http.post(
         Uri.parse("${global.baseUrl}checkout"),
         headers: await global.getApiHeaders(true),
         body: json.encode(bookNow),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"].toString() == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"].toString() == "1") {
         recordList = BookNow.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -267,17 +318,22 @@ class APIHelper {
       debugPrint("Exception - checkOut(): $e");
     }
   }
+
   Future<dynamic> checkOutCallBack(int orderId) async {
-      try {
+    try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}checkout-callback"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"order_id": orderId, }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({
+          "order_id": orderId,
+        }),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       // if (response.statusCode == 200 ) {
-      if (response.statusCode == 200 && json.decode(response.body)["status"].toString() == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"].toString() == "1") {
         recordList = CallBackModel.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -294,7 +350,8 @@ class APIHelper {
         Uri.parse("${global.baseUrl}clear_cart"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200) {
@@ -316,7 +373,8 @@ class APIHelper {
           },
           options: Options(
             headers: await global.getApiHeaders(false),
-          ));log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+          ));
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         recordList = Cookies.fromJson(response.data['data']);
@@ -336,7 +394,8 @@ class APIHelper {
         Uri.parse("${global.baseUrl}delete_all_notifications"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
       if (response.statusCode == 200) {
@@ -346,24 +405,25 @@ class APIHelper {
       debugPrint("Exception - deleteAllNotifications(): $e");
     }
   }
-     Future<dynamic> deleteAccount(int? userId) async {
-      try {
-        if(userId == null) {
-          throw "Empty user id passed to deleteAcccount()";
-        }
-        final response = await http.post(
+
+  Future<dynamic> deleteAccount(int? userId) async {
+    try {
+      if (userId == null) {
+        throw "Empty user id passed to deleteAcccount()";
+      }
+      final response = await http.post(
           Uri.parse("${global.baseUrl}delete_all_user_data"),
           headers: await global.getApiHeaders(true),
-          body: json.encode({"id": userId})
-        );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
-        dynamic recordList;
-        if(response.statusCode == 200) {
-          return getAPIResult(response, recordList);
-        }
-      } catch (e) {
-        debugPrint("Exception - deleteAccount(): $e");
+          body: json.encode({"id": userId}));
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      dynamic recordList;
+      if (response.statusCode == 200) {
+        return getAPIResult(response, recordList);
       }
+    } catch (e) {
+      debugPrint("Exception - deleteAccount(): $e");
     }
+  }
 
   Future<dynamic> delFromCart(int? userId, int? productId) async {
     try {
@@ -371,10 +431,12 @@ class APIHelper {
         Uri.parse("${global.baseUrl}del_frm_cart"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "product_id": productId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Cart.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -391,10 +453,13 @@ class APIHelper {
         Uri.parse("${global.baseUrl}forget_password"),
         headers: await global.getApiHeaders(false),
         body: json.encode({"user_email": userEmail}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body) != null && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body) != null &&
+          json.decode(response.body)["status"] == "1") {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -404,7 +469,6 @@ class APIHelper {
       debugPrint("Exception - forgotPassword(): $e");
     }
   }
-  
 
   Future<dynamic> getAllBookings(int? userId) async {
     try {
@@ -412,11 +476,15 @@ class APIHelper {
         Uri.parse("${global.baseUrl}all_booking"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<AllBookings>.from(json.decode(response.body)["data"].map((x) => AllBookings.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<AllBookings>.from(json
+            .decode(response.body)["data"]
+            .map((x) => AllBookings.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -442,12 +510,15 @@ class APIHelper {
         Uri.parse("${global.baseUrl}barber_desc"),
         headers: await global.getApiHeaders(false),
         body: json.encode({"staff_id": staffId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
 
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = PopularBarbers.fromJson(json.decode(response.body)["data"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList =
+            PopularBarbers.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -457,17 +528,27 @@ class APIHelper {
     }
   }
 
-  Future<dynamic> getBarberShopDescription(int? vendorId, String? lat, String? lng) async {
+  Future<dynamic> getBarberShopDescription(
+      int? vendorId, String? lat, String? lng) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}salon_desc"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"vendor_id": vendorId, "lat": lat, "lng": lng, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({
+          "vendor_id": vendorId,
+          "lat": lat,
+          "lng": lng,
+          "lang": global.languageCode
+        }),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)!=null && json.decode(response.body)["status"] == "1") {
-        recordList = BarberShopDesc.fromJson(json.decode(response.body)["data"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body) != null &&
+          json.decode(response.body)["status"] == "1") {
+        recordList =
+            BarberShopDesc.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -481,14 +562,15 @@ class APIHelper {
     try {
       Response response;
       var dio = Dio();
-      response = await dio.get('${global.baseUrl}cancel_reasons',        
+      response = await dio.get('${global.baseUrl}cancel_reasons',
           options: Options(
             headers: await global.getApiHeaders(true),
           ));
       log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200 && response.data["status"] == "1") {
-        recordList = List<CancelReasons>.from(response.data["data"].map((x) => CancelReasons.fromJson(x)));
+        recordList = List<CancelReasons>.from(
+            response.data["data"].map((x) => CancelReasons.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -504,10 +586,12 @@ class APIHelper {
         Uri.parse("${global.baseUrl}show_cart"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Cart.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -524,11 +608,14 @@ class APIHelper {
         Uri.parse("${global.baseUrl}couponlist"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"cart_id": cartId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<Coupons>.from(json.decode(response.body)["data"].map((x) => Coupons.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<Coupons>.from(
+            json.decode(response.body)["data"].map((x) => Coupons.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -542,10 +629,12 @@ class APIHelper {
     try {
       final response = await http.get(
         Uri.parse("${global.baseUrl}currency"),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Currency.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -572,10 +661,12 @@ class APIHelper {
         Uri.parse("${global.baseUrl}show_fav"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = Favorites.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -590,11 +681,14 @@ class APIHelper {
     try {
       final response = await http.get(
         Uri.parse("${global.baseUrl}google_map"),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = GoogleMapModel.fromJson(json.decode(response.body)["data"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList =
+            GoogleMapModel.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -609,10 +703,11 @@ class APIHelper {
       final response = await http.get(
         Uri.parse("${global.baseUrl}mapbox"),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = MapBoxModel.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -628,10 +723,11 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
       final response = await http.get(
         Uri.parse("${global.baseUrl}mapby"),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = MapByModel.fromJson(json.decode(response.body));
       } else {
         recordList = null;
@@ -650,15 +746,16 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
         body: json.encode({
           "lat": lat,
           "lng": lng,
-          
         }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
-      
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<BannerModel>.from(json.decode(response.body)["data"].map((x) => BannerModel.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<BannerModel>.from(json
+            .decode(response.body)["data"]
+            .map((x) => BannerModel.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -668,10 +765,12 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
     }
   }
 
-  Future<dynamic> getNearByBarberShops(String? lat, String? lng, int pageNumber, {String? searchstring}) async {
+  Future<dynamic> getNearByBarberShops(String? lat, String? lng, int pageNumber,
+      {String? searchstring}) async {
     try {
       final response = await http.post(
-        Uri.parse("${global.baseUrl}getnearbysalons?page=${pageNumber.toString()}"),
+        Uri.parse(
+            "${global.baseUrl}getnearbysalons?page=${pageNumber.toString()}"),
         headers: await global.getApiHeaders(false),
         body: json.encode({
           "lat": lat,
@@ -680,11 +779,14 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
           "lang": global.languageCode,
         }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
-     
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<BarberShop>.from(json.decode(response.body)["data"].map((x) => BarberShop.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<BarberShop>.from(json
+            .decode(response.body)["data"]
+            .map((x) => BarberShop.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -699,13 +801,16 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
       final response = await http.post(
         Uri.parse("${global.baseUrl}getnearcouponlist"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"lat": lat, "lng": lng, "lang": global.languageCode}),
+        body:
+            json.encode({"lat": lat, "lng": lng, "lang": global.languageCode}),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<Coupons>.from(json.decode(response.body)["data"].map((x) => Coupons.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<Coupons>.from(
+            json.decode(response.body)["data"].map((x) => Coupons.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -722,14 +827,16 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
         headers: await global.getApiHeaders(true),
         body: json.encode({
           "user_id": userId,
-          
         }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<NotificationList>.from(json.decode(response.body)["data"].map((x) => NotificationList.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<NotificationList>.from(json
+            .decode(response.body)["data"]
+            .map((x) => NotificationList.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -741,11 +848,15 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
 
   Future<dynamic> getPaymentGateways() async {
     try {
-      final response = await http.get(Uri.parse("${global.baseUrl}payment_gateways"), headers: await global.getApiHeaders(true));
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      final response = await http.get(
+          Uri.parse("${global.baseUrl}payment_gateways"),
+          headers: await global.getApiHeaders(true));
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = PaymentGateway.fromJson(json.decode(response.body)["data"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList =
+            PaymentGateway.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
       }
@@ -755,10 +866,12 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
     }
   }
 
-  Future<dynamic> getPopularBarbersList(String? lat, String? lng, int pageNumber, String? searchstring) async {
+  Future<dynamic> getPopularBarbersList(
+      String? lat, String? lng, int pageNumber, String? searchstring) async {
     try {
       final response = await http.post(
-        Uri.parse("${global.baseUrl}popular_barber?page=${pageNumber.toString()}"),
+        Uri.parse(
+            "${global.baseUrl}popular_barber?page=${pageNumber.toString()}"),
         headers: await global.getApiHeaders(false),
         body: json.encode({
           "lat": lat,
@@ -767,11 +880,14 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
           "lang": global.languageCode,
         }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<PopularBarbers>.from(json.decode(response.body)["data"].map((x) => PopularBarbers.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<PopularBarbers>.from(json
+            .decode(response.body)["data"]
+            .map((x) => PopularBarbers.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -786,13 +902,18 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
       final response = await http.post(
         Uri.parse("${global.baseUrl}product_det"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"product_id": productId, "user_id": global.user!.id, "lang": global.languageCode}),
+        body: json.encode({
+          "product_id": productId,
+          "user_id": global.user!.id,
+          "lang": global.languageCode
+        }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
 
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = ProductDetail.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -808,13 +929,17 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
       final response = await http.post(
         Uri.parse("${global.baseUrl}product_orders"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"user_id": global.user!.id, "lang": global.languageCode}),
+        body: json
+            .encode({"user_id": global.user!.id, "lang": global.languageCode}),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<ProductOrderHistory>.from(json.decode(response.body)["data"].map((x) => ProductOrderHistory.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<ProductOrderHistory>.from(json
+            .decode(response.body)["data"]
+            .map((x) => ProductOrderHistory.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -824,17 +949,27 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
     }
   }
 
-  Future<dynamic> getProducts(String? lat, String? lng, int pageNumber, String searchstring) async {
+  Future<dynamic> getProducts(
+      String? lat, String? lng, int pageNumber, String searchstring) async {
     try {
       final response = await http.post(
-        Uri.parse("${global.baseUrl}salon_products?page=${pageNumber.toString()}"),
+        Uri.parse(
+            "${global.baseUrl}salon_products?page=${pageNumber.toString()}"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"lat": lat, "lng": lng, "user_id": global.user!.id, "searchstring": searchstring, "lang": global.languageCode}),
+        body: json.encode({
+          "lat": lat,
+          "lng": lng,
+          "user_id": global.user!.id,
+          "searchstring": searchstring,
+          "lang": global.languageCode
+        }),
       );
-log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<Product>.from(json.decode(response.body)["data"].map((x) => Product.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<Product>.from(
+            json.decode(response.body)["data"].map((x) => Product.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -850,10 +985,10 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
       var dio = Dio();
 
       response = await dio.get('${global.baseUrl}refer_n_earn',
-          
           options: Options(
             headers: await global.getApiHeaders(true),
-          ));log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+          ));
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200 && response.data["status"] == "1") {
         recordList = response.data["data"];
@@ -866,7 +1001,8 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
     }
   }
 
-  Future<dynamic> getSalonListForServices(String? lat, String? lng, String? serviceName) async {
+  Future<dynamic> getSalonListForServices(
+      String? lat, String? lng, String? serviceName) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}service_salons"),
@@ -876,11 +1012,15 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
           "lng": lng,
           "service_name": serviceName,
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<BarberShop>.from(json.decode(response.body)["data"].map((x) => BarberShop.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<BarberShop>.from(json
+            .decode(response.body)["data"]
+            .map((x) => BarberShop.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -897,13 +1037,16 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
         headers: await global.getApiHeaders(true),
         body: json.encode({
           "user_id": global.user!.id,
-          
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<ScratchCard>.from(json.decode(response.body)["data"].map((x) => ScratchCard.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<ScratchCard>.from(json
+            .decode(response.body)["data"]
+            .map((x) => ScratchCard.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -913,17 +1056,26 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
     }
   }
 
-  Future<dynamic> getServices(String? lat, String? lng, int pageNumber, {String? searchstring}) async {
+  Future<dynamic> getServices(String? lat, String? lng, int pageNumber,
+      {String? searchstring}) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}services?page=${pageNumber.toString()}"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"lat": lat, "lng": lng, "searchstring": searchstring, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({
+          "lat": lat,
+          "lng": lng,
+          "searchstring": searchstring,
+          "lang": global.languageCode
+        }),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<Service>.from(json.decode(response.body)["data"].map((x) => Service.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<Service>.from(
+            json.decode(response.body)["data"].map((x) => Service.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -945,7 +1097,7 @@ log("statusCode: ${response.statusCode} url: ${response.request!.url} response: 
           options: Options(
             headers: await global.getApiHeaders(false),
           ));
-log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         recordList = TermsAndCondition.fromJson(response.data['data']);
@@ -958,7 +1110,8 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     }
   }
 
-  Future<dynamic> getTimeSLot(String? selectedDate, int? staffId, int? vendorId) async {
+  Future<dynamic> getTimeSLot(
+      String? selectedDate, int? staffId, int? vendorId) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}timeslot"),
@@ -967,13 +1120,16 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
           "selected_date": selectedDate,
           "staff_id": staffId,
           "vendor_id": vendorId,
-          
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
-        recordList = List<TimeSlot>.from(json.decode(response.body)["data"].map((x) => TimeSlot.fromJson(x)));
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
+        recordList = List<TimeSlot>.from(json
+            .decode(response.body)["data"]
+            .map((x) => TimeSlot.fromJson(x)));
       } else {
         recordList = null;
       }
@@ -990,12 +1146,13 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         headers: await global.getApiHeaders(true),
         body: json.encode({
           "id": id,
-          
         }),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
         recordList.token = json.decode(response.body)["token"];
       } else {
@@ -1013,12 +1170,15 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         Uri.parse("${global.baseUrl}login_with_email"),
         headers: await global.getApiHeaders(false),
         body: json.encode(user),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
-        
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body) != null && json.decode(response.body)["data"] != null) {
-        recordList = CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body) != null &&
+          json.decode(response.body)["data"] != null) {
+        recordList =
+            CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
         recordList.cartCount = json.decode(response.body)['data']["cart_count"];
         recordList.token = json.decode(response.body)["token"];
       } else {
@@ -1037,10 +1197,12 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         headers: await global.getApiHeaders(false),
         body: json.encode(user),
       );
-    log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body) != null && json.decode(response.body)["data"] != null) {
+      if (response.statusCode == 200 &&
+          json.decode(response.body) != null &&
+          json.decode(response.body)["data"] != null) {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -1057,10 +1219,12 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         Uri.parse("${global.baseUrl}scratch"),
         headers: await global.getApiHeaders(true),
         body: json.encode({"user_id": userId, "scratch_id": scratchId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          json.decode(response.body)["status"] == "1") {
         recordList = ScratchCard.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -1083,7 +1247,7 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
           options: Options(
             headers: await global.getApiHeaders(false),
           ));
-       log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         recordList = PrivacyPolicy.fromJson(response.data['data']);
@@ -1095,19 +1259,33 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
       debugPrint("Exception - privacyPolicy(): $e");
     }
   }
-  Future<dynamic> productCartCheckout(int? userId, String paymentStatus, String paymentGateway, {String? paymentId}) async {
+
+  Future<dynamic> productCartCheckout(
+      int? userId, String paymentStatus, String paymentGateway,
+      {String? paymentId}) async {
     try {
-      log( "sss userId: $userId, paymentStatus: $paymentStatus, paymentGateway: $paymentGateway, paymentId: $paymentId");
+      log("sss userId: $userId, paymentStatus: $paymentStatus, paymentGateway: $paymentGateway, paymentId: $paymentId");
       final response = await http.post(
         Uri.parse("${global.baseUrl}product_cart_checkout"),
         headers: await global.getApiHeaders(true),
-        body: json.encode({"user_id": userId, "payment_status": paymentStatus, "payment_gateway": paymentGateway, "payment_id": paymentId, "lang": global.languageCode}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({
+          "user_id": userId,
+          "payment_status": paymentStatus,
+          "payment_gateway": paymentGateway,
+          "payment_id": paymentId,
+          "lang": global.languageCode
+        }),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body)["status"] == "1" || json.decode(response.body)["status"] == "2") {
-        recordList = ProductCartCheckout.fromJson(json.decode(response.body)["data"]["order"]);
-        global.user!.cartCount = json.decode(response.body)['data']['cart_count'];
+      if (response.statusCode == 200 &&
+              json.decode(response.body)["status"] == "1" ||
+          json.decode(response.body)["status"] == "2") {
+        recordList = ProductCartCheckout.fromJson(
+            json.decode(response.body)["data"]["order"]);
+        global.user!.cartCount =
+            json.decode(response.body)['data']['cart_count'];
       } else {
         recordList = null;
       }
@@ -1130,41 +1308,58 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         'device_id': global.appDeviceId,
         'referral_code': user.referralCode,
         'fb_id': user.fbId,
-        'user_image': user.userImage != null ? await MultipartFile.fromFile(user.userImage!.path.toString()) : null,
+        'user_image': user.userImage != null
+            ? await MultipartFile.fromFile(user.userImage!.path.toString())
+            : null,
         'apple_id': user.appleId
-      });      
+      });
       response = await dio.post('${global.baseUrl}signup',
           data: formData,
           options: Options(
             headers: await global.getApiHeaders(false),
           ));
-   log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         recordList = CurrentUser.fromJson(response.data['data']);
       } else {
         recordList = null;
       }
-     return getDioResult(response, recordList);
+      return getDioResult(response, recordList);
     } catch (e) {
       debugPrint("Exception - signUp(): $e");
     }
   }
 
-  Future<dynamic> socialLogin({String? userEmail, String? facebookId, String? emailId, String? type, String? appleId}) async {
+  Future<dynamic> socialLogin(
+      {String? userEmail,
+      String? facebookId,
+      String? emailId,
+      String? type,
+      String? appleId}) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}social_login"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"user_email": userEmail, "facebook_id": facebookId, "email_id": emailId, "type": type, "apple_id": appleId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode({
+          "user_email": userEmail,
+          "facebook_id": facebookId,
+          "email_id": emailId,
+          "type": type,
+          "apple_id": appleId
+        }),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && jsonDecode(response.body)["status"] == "1") {
-        recordList = CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
+      if (response.statusCode == 200 &&
+          jsonDecode(response.body)["status"] == "1") {
+        recordList =
+            CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
         recordList.cartCount = json.decode(response.body)['data']["cart_count"];
         recordList.token = json.decode(response.body)["token"];
-      } else if (response.statusCode == 200 && jsonDecode(response.body)["status"] == "4") {
+      } else if (response.statusCode == 200 &&
+          jsonDecode(response.body)["status"] == "4") {
         recordList = null;
       } else {
         recordList = null;
@@ -1188,15 +1383,17 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
         'id': id,
         'user_name': userName,
         'user_password': userPassword,
-        
-        'user_image': userImage != null ? await MultipartFile.fromFile(userImage.path.toString()) : null,
+        'user_image': userImage != null
+            ? await MultipartFile.fromFile(userImage.path.toString())
+            : null,
       });
-      
+
       response = await dio.post('${global.baseUrl}profile_edit',
           data: formData,
           options: Options(
             headers: await global.getApiHeaders(true),
-          ));log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
+          ));
+      log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} response: ${response.data} ");
       dynamic recordList;
       if (response.statusCode == 200) {
         recordList = CurrentUser.fromJson(response.data['data']);
@@ -1210,17 +1407,23 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     }
   }
 
-  Future<dynamic> verifyOtpAfterLogin(String? userPhone, String? status, String? deviceId) async {
+  Future<dynamic> verifyOtpAfterLogin(
+      String? userPhone, String? status, String? deviceId) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}login_verifyotpfirebase"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"user_phone": userPhone, "status": status, "device_id": deviceId}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+        body: json.encode(
+            {"user_phone": userPhone, "status": status, "device_id": deviceId}),
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && json.decode(response.body) != null && json.decode(response.body)["data"] != null) {
-        recordList = CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
+      if (response.statusCode == 200 &&
+          json.decode(response.body) != null &&
+          json.decode(response.body)["data"] != null) {
+        recordList =
+            CurrentUser.fromJson(json.decode(response.body)["data"]["user"]);
         recordList.cartCount = json.decode(response.body)['data']["cart_count"];
         recordList.token = json.decode(response.body)["token"];
       } else {
@@ -1232,21 +1435,28 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     }
   }
 
-  Future<dynamic> verifyOtpAfterRegistration(String? userPhone, String? status, String? referralCode, String? deviceId) async {
+  Future<dynamic> verifyOtpAfterRegistration(String? userPhone, String? status,
+      String? referralCode, String? deviceId) async {
     try {
-    log("status :$status");  
-    log("referralCode :$referralCode");
-    log("deviceId :$deviceId");
-    log("userPhone :$userPhone");
-     final response = await http.post(
+      log("status :$status");
+      log("referralCode :$referralCode");
+      log("deviceId :$deviceId");
+      log("userPhone :$userPhone");
+      final response = await http.post(
         Uri.parse("${global.baseUrl}verify_via_firebase"),
         headers: await global.getApiHeaders(false),
-        body: json.encode({"user_phone": userPhone, "status": status, "referral_code": referralCode, "device_id": deviceId}),
+        body: json.encode({
+          "user_phone": userPhone,
+          "status": status,
+          "referral_code": referralCode,
+          "device_id": deviceId
+        }),
       );
-     log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && jsonDecode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          jsonDecode(response.body)["status"] == "1") {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
         recordList.token = json.decode(response.body)["token"];
       } else {
@@ -1257,16 +1467,19 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
       debugPrint("Exception - verifyOtpAfterRegistration(): $e");
     }
   }
+
   Future<dynamic> verifyOtpForgotPassword(String? userEmail, String otp) async {
     try {
       final response = await http.post(
         Uri.parse("${global.baseUrl}verify_otp"),
         headers: await global.getApiHeaders(false),
         body: json.encode({"user_email": userEmail, "otp": otp}),
-      );log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
+      );
+      log("statusCode: ${response.statusCode} url: ${response.request!.url} response: ${response.body} ");
 
       dynamic recordList;
-      if (response.statusCode == 200 && jsonDecode(response.body)["status"] == "1") {
+      if (response.statusCode == 200 &&
+          jsonDecode(response.body)["status"] == "1") {
         recordList = CurrentUser.fromJson(json.decode(response.body)["data"]);
       } else {
         recordList = null;
@@ -1277,4 +1490,3 @@ log("statusCode: ${response.statusCode} url: ${response.requestOptions.uri} resp
     }
   }
 }
-

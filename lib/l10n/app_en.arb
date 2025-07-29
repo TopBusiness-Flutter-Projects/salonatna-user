@@ -11,6 +11,10 @@
     "@lbl_skip": {
         "description": "Skip"
     },
+     "txt_future_app_will_shown_here": "Future App will be shown here",
+
+     "lbl_back":"Back",
+      "future_app":"Future App",
     "txt_get_reward_points_promotions": "Get Reward Points & Promotions",
     "@txt_get_reward_points_promotions": {
         "description": "Get Reward Points & Promotions"

@@ -9,6 +9,8 @@
   "txt_ekan_barber_shop": "صالون Ekan للحلاقة",
   "txt_app": "التطبيق!",
   "txt_welcome_back": "مرحبًا بعودتك",
+  "lbl_back": "رجوع",
+   "future_app":"تطبيقات المستقبل",
   "txt_please_enablet_location_permission_to_use_app": "يرجى تفعيل إذن الموقع لاستخدام التطبيق",
   "txt_sigin_to_continue": "قم بتسجيل الدخول للمتابعة",
   "hnt_email": "demo@example.com",
@@ -242,5 +244,7 @@
 "btn_delete": "حذف",
 "lbl_account_deletion": "حذف الحساب",
 "lbl_loading": "جاري التحمبل ...",
+"future_app":"تطبيقات المستقبل",
+"txt_future_app_will_shown_here": "ستُعرض تطبيقات المستقبل هنا",
 "lbl_account_deletion_confirmation": "هل أنت متأكد أنك تريد حذف حسابك؟"
 }
